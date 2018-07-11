@@ -1,10 +1,12 @@
 package com.example.test.mvvm.GithubClient.service;
 
+import android.arch.lifecycle.LiveData;
+
 import com.example.test.mvvm.GithubClient.model.Project;
+import com.example.test.mvvm.utils.ApiResponse;
 
 import java.util.List;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -16,9 +18,9 @@ public interface GithubService {
 
     //List
     @GET("users/{user}/repos")
-    Call<List<Project>> getProjectList(@Path("user") String user);
+    LiveData<ApiResponse<List<Project>>> getProjectList(@Path("user") String user);
 
     //Details
     @GET("/repos/{user}/{reponame}")
-    Call<Project> getProjectDetails(@Path("user") String user,@Path("reponame") String projectName);
+    LiveData<ApiResponse<Project>> getProjectDetails(@Path("user") String user,@Path("reponame") String projectName);
 }

@@ -18,6 +18,7 @@ public class  MyApp extends Application {
                 .persistentModule(new PersistentModule())
                 .apiModule(new ApiModule("https://api.github.com/"))
                 .build();
+
     }
 
     public AppComponent getPersistentComponent() {

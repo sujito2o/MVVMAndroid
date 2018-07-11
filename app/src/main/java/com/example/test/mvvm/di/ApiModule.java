@@ -3,6 +3,8 @@ package com.example.test.mvvm.di;
 import android.app.Application;
 
 import com.example.test.mvvm.GithubClient.service.GithubService;
+import com.example.test.mvvm.utils.AppExecutors;
+import com.example.test.mvvm.utils.LiveDataCallAdapterFactory;
 import com.example.test.mvvm.GithubClient.service.ProjectRepository;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -56,6 +58,7 @@ public class ApiModule {
     Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .baseUrl(mBaseUrl)
                 .client(okHttpClient)
                 .build();
@@ -72,6 +75,6 @@ public class ApiModule {
     @Singleton
     public ProjectRepository providesRepo(
             GithubService githubService) {
-        return new ProjectRepository(githubService);
+        return new ProjectRepository(githubService,new AppExecutors());
     }
 }

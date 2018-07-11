@@ -12,7 +12,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.test.mvvm.utils.ApiResponse;
 import com.example.test.mvvm.MyApp;
 import com.example.test.mvvm.R;
 import com.example.test.mvvm.databinding.FragmentProjectListBinding;
@@ -20,6 +22,8 @@ import com.example.test.mvvm.GithubClient.model.Project;
 import com.example.test.mvvm.GithubClient.view.adapter.ProjectAdapter;
 import com.example.test.mvvm.GithubClient.view.callback.ProjectClickCallback;
 import com.example.test.mvvm.GithubClient.viewModel.ProjectListViewModel;
+import com.example.test.mvvm.utils.Resource;
+import com.example.test.mvvm.utils.Status;
 
 import java.util.List;
 
@@ -84,14 +88,21 @@ public class ProjectListFragment extends Fragment {
 
         //Link LifecycleOwner so that it updates when data is updated, add observer within lifecycle
         //The observer receives the event only when it is in the STARTED or RESUMED state
-        viewModel.getProjectListObservable().observe(this, new Observer<List<Project>>() {
-            @Override
-            public void onChanged(@Nullable List<Project> projects) {
-                if (projects != null) {
-                    binding.setIsLoading(false);
-                    projectAdapter.setProjectList(projects);
-                }
-                viewModel.myCustomMethod();
+
+
+        viewModel.getProjectListObservable().observe(this, listResource -> {
+            if(listResource.status == Status.SUCCESS){
+                binding.setIsLoading(false);
+                projectAdapter.setProjectList(listResource.data);
+                Toast.makeText(getActivity(),"Success with code "+ String.valueOf(listResource.statusCode), Toast.LENGTH_SHORT).show();
+            }
+            else if (listResource.status == Status.LOADING){
+
+                //do nothing
+            }
+            else{
+
+                Toast.makeText(getActivity(),"Error with code "+ String.valueOf(listResource.statusCode), Toast.LENGTH_SHORT).show();
             }
         });
 
